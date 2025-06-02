@@ -4,9 +4,15 @@ from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
 import os
 
+from dotenv import load_dotenv
+
+load_dotenv()
+channel_secret = os.getenv("LINE_CHANNEL_SECRET")
+channel_token = os.getenv("LINE_CHANNEL_ACCESS_TOKEN")
+
 app = Flask(__name__)
 
-# 環境變數從 Render 讀取
+# 建立 Messaging API 實例
 line_bot_api = LineBotApi(os.environ.get("LINE_CHANNEL_ACCESS_TOKEN"))
 handler = WebhookHandler(os.environ.get("LINE_CHANNEL_SECRET"))
 
@@ -32,6 +38,7 @@ def handle_message(event):
         event.reply_token,
         TextSendMessage(text=reply)
     )
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080)
